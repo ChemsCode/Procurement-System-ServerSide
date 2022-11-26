@@ -6,6 +6,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    companyname: {
+        type: String,
+        required: true
+    },
     roles: {
         User: {
             type: Number,

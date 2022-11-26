@@ -12,12 +12,14 @@ const handleLogin = async (req, res) => {
     const match = await bcrypt.compare(pwd, foundUser.password);
     if (match) {
         const roles = Object.values(foundUser.roles).filter(Boolean);
+        const companyname = Object.values(foundUser.companyname).join('');
         // create JWTs
         const accessToken = jwt.sign(
             {
                 "UserInfo": {
                     "username": foundUser.username,
-                    "roles": roles
+                    "roles": roles,
+                    "companyname": companyname
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
@@ -38,7 +40,7 @@ const handleLogin = async (req, res) => {
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
         // Send authorization roles and access token to user
-        res.json({ roles, accessToken });
+        res.json({ roles, accessToken, companyname });
 
     } else {
         res.sendStatus(401);
